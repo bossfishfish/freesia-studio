@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudFlow - AI 驱动的团队协作平台</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #fafafa;
+      --white: #ffffff;
+      --text: #111827;
+      --text-2: #4b5563;
+      --text-3: #9ca3af;
+      --primary: #4f46e5;
+      --primary-light: #6366f1;
+      --primary-bg: #eef2ff;
+      --border: #e5e7eb;
+      --radius: 16px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+      background: var(--white); color: var(--text);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1140px; margin: 0 auto; padding: 0 32px;
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { font-size: 20px; font-weight: 800; color: var(--primary); }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; color: var(--text-2); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 600;
+      text-decoration: none; transition: all 0.3s; border: none; cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(79,70,229,0.3); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-ghost { background: transparent; color: var(--primary); padding: 10px 0; }
+
+    /* HERO */
+    .hero {
+      padding: 160px 32px 100px; text-align: center;
+      background: linear-gradient(180deg, var(--primary-bg) 0%, var(--white) 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 980px;
+      background: var(--white); border: 1px solid var(--border);
+      font-size: 13px; color: var(--text-2); margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px); font-weight: 900;
+      line-height: 1.05; letter-spacing: -0.03em;
+      max-width: 720px; margin: 0 auto;
+    }
+    .hero h1 span { color: var(--primary); }
+    .hero > p {
+      font-size: 18px; color: var(--text-2); margin-top: 20px;
+      max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+    .hero-metrics {
+      display: flex; gap: 48px; justify-content: center; margin-top: 56px;
+    }
+    .hero-metric { text-align: center; }
+    .hero-metric .num { font-size: 32px; font-weight: 800; color: var(--text); }
+    .hero-metric .lbl { font-size: 13px; color: var(--text-3); margin-top: 2px; }
+
+    /* MOCKUP */
+    .hero-mockup {
+      max-width: 960px; margin: 64px auto 0;
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+      background: var(--white);
+    }
+    .mockup-bar {
+      height: 40px; background: #f3f4f6; display: flex; align-items: center;
+      padding: 0 16px; gap: 8px; border-bottom: 1px solid var(--border);
+    }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-dot.r { background: #ef4444; }
+    .mockup-dot.y { background: #f59e0b; }
+    .mockup-dot.g { background: #22c55e; }
+    .mockup-url {
+      margin-left: 16px; padding: 4px 14px; border-radius: 6px;
+      background: var(--white); font-size: 12px; color: var(--text-3);
+      border: 1px solid var(--border);
+    }
+    .mockup-content {
+      padding: 32px; display: flex; gap: 24px; min-height: 340px;
+    }
+    .mockup-sidebar {
+      width: 200px; flex-shrink: 0; background: #f9fafb; border-radius: 12px; padding: 20px;
+    }
+    .sidebar-item {
+      padding: 10px 14px; border-radius: 8px; font-size: 13px;
+      color: var(--text-2); margin-bottom: 4px; display: flex; align-items: center; gap: 10px;
+      cursor: default;
+    }
+    .sidebar-item.active { background: var(--primary-bg); color: var(--primary); font-weight: 600; }
+    .sidebar-icon { font-size: 15px; }
+    .mockup-main { flex: 1; }
+    .mockup-main h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .kanban { display: flex; gap: 16px; }
+    .kanban-col { flex: 1; }
+    .kanban-title {
+      font-size: 12px; font-weight: 600; color: var(--text-3);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .kanban-count {
+      font-size: 11px; background: #f3f4f6; padding: 1px 8px;
+      border-radius: 10px; color: var(--text-3);
+    }
+    .kanban-card {
+      padding: 14px; border-radius: 10px; background: var(--white);
+      border: 1px solid var(--border); margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .kanban-card h4 { font-size: 13px; font-weight: 600; }
+    .kanban-card p { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+    .kanban-tag {
+      display: inline-block; padding: 2px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 600; margin-top: 8px;
+    }
+    .tag-purple { background: #f3e8ff; color: #7c3aed; }
+    .tag-blue { background: #dbeafe; color: #2563eb; }
+    .tag-green { background: #dcfce7; color: #16a34a; }
+    .tag-orange { background: #fff7ed; color: #ea580c; }
+
+    /* SECTIONS */
+    .section { padding: 100px 32px; max-width: 1140px; margin: 0 auto; }
+    .section-center { text-align: center; }
+    .section-tag {
+      font-size: 13px; font-weight: 600; color: var(--primary);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px;
+    }
+    .section h2 {
+      font-size: clamp(32px, 4vw, 48px); font-weight: 800;
+      letter-spacing: -0.025em; line-height: 1.1;
+    }
+    .section > p, .section-center > p {
+      font-size: 17px; color: var(--text-2); margin-top: 14px;
+      max-width: 520px; line-height: 1.7;
+    }
+    .section-center > p { margin-left: auto; margin-right: auto; }
+
+    /* FEATURES GRID */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 56px;
+    }
+    .feature-card {
+      padding: 36px; border-radius: var(--radius);
+      background: var(--bg); border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+    .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.04); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 20px;
+    }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+    /* BIG FEATURE */
+    .big-feature {
+      display: flex; align-items: center; gap: 64px;
+      padding: 100px 32px; max-width: 1140px; margin: 0 auto;
+    }
+    .big-feature.reverse { flex-direction: row-reverse; }
+    .big-feature-text { flex: 1; }
+    .big-feature-visual {
+      flex: 1; border-radius: var(--radius); overflow: hidden;
+      background: var(--bg); border: 1px solid var(--border);
+      padding: 32px;
+    }
+    .big-feature-text .section-tag { margin-bottom: 12px; }
+    .big-feature-text h2 {
+      font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1;
+    }
+    .big-feature-text p {
+      font-size: 16px; color: var(--text-2); margin-top: 16px; line-height: 1.7;
+    }
+    .check-list { margin-top: 24px; list-style: none; }
+    .check-list li {
+      font-size: 15px; color: var(--text-2); padding: 6px 0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .check-list .check { color: #22c55e; font-weight: 700; }
+
+    /* CHART VISUAL */
+    .chart-visual { height: 200px; position: relative; }
+    .chart-visual svg { width: 100%; height: 100%; }
+    .bar-group { display: flex; gap: 8px; align-items: flex-end; height: 160px; margin-top: 20px; }
+    .bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .bar {
+      width: 100%; border-radius: 6px 6px 0 0;
+      transition: height 0.6s ease;
+    }
+    .bar-label { font-size: 11px; color: var(--text-3); }
+
+    /* INTEGRATIONS */
+    .integrations-row {
+      display: flex; justify-content: center; gap: 24px; margin-top: 48px; flex-wrap: wrap;
+    }
+    .integration-badge {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 24px; border-radius: 12px;
+      background: var(--white); border: 1px solid var(--border);
+      font-size: 14px; font-weight: 500; color: var(--text);
+    }
+    .integration-badge .icon { font-size: 20px; }
+
+    /* PRICING */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 56px; max-width: 960px; margin-left: auto; margin-right: auto;
+    }
+    .price-card {
+      padding: 40px 32px; border-radius: var(--radius);
+      background: var(--white); border: 1px solid var(--border);
+      text-align: left; transition: all 0.3s; position: relative;
+    }
+    .price-card.popular {
+      border-color: var(--primary);
+      box-shadow: 0 8px 40px rgba(79,70,229,0.1);
+    }
+    .price-card.popular::before {
+      content: '最受欢迎'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      padding: 4px 14px; border-radius: 980px;
+      background: var(--primary); color: #fff;
+      font-size: 12px; font-weight: 600;
+    }
+    .price-card .plan-name { font-size: 16px; font-weight: 700; color: var(--text-2); }
+    .price-card .price { font-size: 40px; font-weight: 800; margin: 12px 0 4px; letter-spacing: -0.02em; }
+    .price-card .price span { font-size: 16px; font-weight: 400; color: var(--text-3); }
+    .price-card .plan-desc { font-size: 14px; color: var(--text-3); margin-bottom: 24px; }
+    .price-features { list-style: none; margin-bottom: 28px; }
+    .price-features li {
+      font-size: 14px; color: var(--text-2); padding: 6px 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .price-features .ck { color: var(--primary); font-weight: 700; }
+
+    /* CTA BANNER */
+    .cta-banner {
+      text-align: center; padding: 100px 32px;
+      background: linear-gradient(180deg, var(--white) 0%, var(--primary-bg) 100%);
+    }
+    .cta-banner h2 {
+      font-size: clamp(32px, 4vw, 48px); font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .cta-banner p { font-size: 17px; color: var(--text-2); margin-top: 14px; }
+    .cta-banner .btn { margin-top: 28px; }
+
+    /* FOOTER */
+    footer {
+      padding: 48px 32px; border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .footer-brand { font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 16px; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 24px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: var(--text-3); text-decoration: none; }
+    .footer-copy { font-size: 12px; color: var(--text-3); }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 13px; color: var(--text-3); text-decoration: none;
+      margin-bottom: 16px; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--primary); }
+
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .nav-links a:not(.btn) { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .big-feature, .big-feature.reverse { flex-direction: column; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .hero-metrics { flex-direction: column; gap: 20px; }
+      .kanban { flex-direction: column; }
+      .mockup-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">CloudFlow</div>
+    <div class="nav-links">
+      <a href="#features">功能</a>
+      <a href="#pricing">价格</a>
+      <a href="#integrations">集成</a>
+      <a href="#" class="btn btn-outline" style="padding:8px 18px;">登录</a>
+      <a href="#" class="btn btn-primary" style="padding:8px 18px;">免费试用</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> 全新 3.0 版本已上线</div>
+  <h1>用 AI 重新定义<br><span>团队协作</span>方式</h1>
+  <p>CloudFlow 将项目管理、团队沟通和自动化工作流融为一体，让团队把时间花在真正重要的事上。</p>
+  <div class="hero-actions">
+    <a href="#" class="btn btn-primary">免费开始使用 &#8594;</a>
+    <a href="#" class="btn btn-outline">观看演示视频 &#9654;</a>
+  </div>
+  <div class="hero-metrics">
+    <div class="hero-metric"><div class="num">2,400+</div><div class="lbl">企业用户</div></div>
+    <div class="hero-metric"><div class="num">98.6%</div><div class="lbl">正常运行时间</div></div>
+    <div class="hero-metric"><div class="num">10h+</div><div class="lbl">每周节省时间</div></div>
+  </div>
+
+  <div class="hero-mockup reveal">
+    <div class="mockup-bar">
+      <span class="mockup-dot r"></span>
+      <span class="mockup-dot y"></span>
+      <span class="mockup-dot g"></span>
+      <span class="mockup-url">app.cloudflow.com/projects/dashboard</span>
+    </div>
+    <div class="mockup-content">
+      <div class="mockup-sidebar">
+        <div class="sidebar-item active"><span class="sidebar-icon">&#128202;</span> 看板</div>
+        <div class="sidebar-item"><span class="sidebar-icon">&#128197;</span> 日历</div>
+        <div class="sidebar-item"><span class="sidebar-icon">&#128172;</span> 消息</div>
+        <div class="sidebar-item"><span class="sidebar-icon">&#128101;</span> 团队</div>
+        <div class="sidebar-item"><span class="sidebar-icon">&#128200;</span> 报表</div>
+        <div class="sidebar-item"><span class="sidebar-icon">&#9881;</span> 设置</div>
+      </div>
+      <div class="mockup-main">
+        <h3>产品开发 Sprint #12</h3>
+        <div class="kanban">
+          <div class="kanban-col">
+            <div class="kanban-title">待处理 <span class="kanban-count">3</span></div>
+            <div class="kanban-card"><h4>用户权限系统重构</h4><p>涉及 12 个 API 端点</p><span class="kanban-tag tag-purple">后端</span></div>
+            <div class="kanban-card"><h4>移动端适配优化</h4><p>iPhone / Android 双端</p><span class="kanban-tag tag-blue">前端</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-title">进行中 <span class="kanban-count">2</span></div>
+            <div class="kanban-card"><h4>支付流程改版</h4><p>预计完成度 65%</p><span class="kanban-tag tag-orange">紧急</span></div>
+            <div class="kanban-card"><h4>数据看板 v2</h4><p>设计稿已确认</p><span class="kanban-tag tag-blue">前端</span></div>
+          </div>
+          <div class="kanban-col">
+            <div class="kanban-title">已完成 <span class="kanban-count">4</span></div>
+            <div class="kanban-card"><h4>SSO 单点登录</h4><p>已通过安全审计</p><span class="kanban-tag tag-green">已上线</span></div>
+            <div class="kanban-card"><h4>通知系统优化</h4><p>送达率提升至 99.2%</p><span class="kanban-tag tag-green">已上线</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section section-center" id="features">
+  <div class="section-tag">FEATURES</div>
+  <h2 class="reveal">一切协作所需，<br>尽在 CloudFlow。</h2>
+  <p class="reveal">从任务管理到自动化工作流，从团队沟通到数据分析。</p>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon" style="background:#eef2ff;">&#128202;</div>
+      <h3>智能看板</h3>
+      <p>AI 自动分析任务优先级和依赖关系，实时更新项目进度，让团队始终聚焦高价值工作。</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon" style="background:#fef3c7;">&#9889;</div>
+      <h3>自动化流程</h3>
+      <p>拖拽式工作流编辑器，自动触发任务分配、状态更新和通知，每周为团队节省 10+ 小时。</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon" style="background:#dcfce7;">&#128172;</div>
+      <h3>实时协作</h3>
+      <p>内置即时通讯和文档协同编辑，所有讨论都与任务关联，告别信息碎片化。</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon" style="background:#fce7f3;">&#128200;</div>
+      <h3>数据报表</h3>
+      <p>可视化项目数据仪表盘，追踪团队效率、瓶颈分析和趋势预测，用数据驱动决策。</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon" style="background:#e0e7ff;">&#128274;</div>
+      <h3>企业级安全</h3>
+      <p>SOC2 Type II 认证，端到端加密，细粒度权限控制和完整审计日志。</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon" style="background:#fff7ed;">&#128268;</div>
+      <h3>开放 API</h3>
+      <p>完善的 REST API 和 Webhook 支持，与你现有的工具无缝集成。</p>
+    </div>
+  </div>
+</section>
+
+<!-- BIG FEATURE 1 -->
+<div class="big-feature" style="background:#f9fafb;">
+  <div class="big-feature-text reveal">
+    <div class="section-tag">AI ASSISTANT</div>
+    <h2>AI 助手，你的<br>隐形队友。</h2>
+    <p>CloudFlow AI 能理解项目上下文，自动分配任务、预测延期风险，并在关键节点给出建议。</p>
+    <ul class="check-list">
+      <li><span class="check">&#10003;</span> 自动拆解需求为可执行任务</li>
+      <li><span class="check">&#10003;</span> 智能评估任务工时和优先级</li>
+      <li><span class="check">&#10003;</span> 延期风险预警和资源调配建议</li>
+      <li><span class="check">&#10003;</span> 自然语言查询项目数据</li>
+    </ul>
+  </div>
+  <div class="big-feature-visual reveal">
+    <div style="background:#f3f4f6;border-radius:12px;padding:20px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <div style="width:32px;height:32px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">AI</div>
+        <div style="font-size:13px;font-weight:600;">CloudFlow AI</div>
+      </div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.8;">
+        <p>&#128161; 检测到 3 个任务可能延期：</p>
+        <div style="background:#fff;border-radius:8px;padding:12px;margin:8px 0;border:1px solid var(--border);">
+          <div style="font-size:12px;font-weight:600;">支付流程改版</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px;">建议：将联调测试前置，可缩短 2 天周期</div>
+        </div>
+        <div style="background:#fff;border-radius:8px;padding:12px;margin:8px 0;border:1px solid var(--border);">
+          <div style="font-size:12px;font-weight:600;">用户权限重构</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px;">建议：将权限模块拆分为 2 个子任务并行开发</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BIG FEATURE 2 -->
+<div class="big-feature reverse">
+  <div class="big-feature-text reveal">
+    <div class="section-tag">ANALYTICS</div>
+    <h2>用数据做出<br>更好的决策。</h2>
+    <p>实时追踪项目健康度、团队负载和交付趋势，从数据中发现瓶颈和优化机会。</p>
+    <ul class="check-list">
+      <li><span class="check">&#10003;</span> 项目进度实时仪表盘</li>
+      <li><span class="check">&#10003;</span> 团队效率和负载均衡分析</li>
+      <li><span class="check">&#10003;</span> 自定义报表和定期推送</li>
+      <li><span class="check">&#10003;</span> 历史趋势对比和预测</li>
+    </ul>
+  </div>
+  <div class="big-feature-visual reveal">
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px;">本月任务完成趋势</div>
+      <div style="font-size:11px;color:var(--text-3);">相比上月增长 23%</div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-item"><div class="bar" style="height:45%;background:var(--primary-bg);"></div><div class="bar-label">周一</div></div>
+      <div class="bar-item"><div class="bar" style="height:70%;background:var(--primary-bg);"></div><div class="bar-label">周二</div></div>
+      <div class="bar-item"><div class="bar" style="height:55%;background:var(--primary-bg);"></div><div class="bar-label">周三</div></div>
+      <div class="bar-item"><div class="bar" style="height:85%;background:var(--primary);border-radius:6px 6px 0 0;"></div><div class="bar-label" style="font-weight:600;color:var(--primary);">周四</div></div>
+      <div class="bar-item"><div class="bar" style="height:60%;background:var(--primary-bg);"></div><div class="bar-label">周五</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- INTEGRATIONS -->
+<section class="section section-center" id="integrations" style="background:#f9fafb;">
+  <div class="section-tag">INTEGRATIONS</div>
+  <h2 class="reveal">与你爱用的工具<br>无缝连接。</h2>
+  <p class="reveal">CloudFlow 已支持 50+ 主流工具的原生集成。</p>
+  <div class="integrations-row reveal">
+    <div class="integration-badge"><span class="icon">&#128011;</span> GitHub</div>
+    <div class="integration-badge"><span class="icon">&#128172;</span> Slack</div>
+    <div class="integration-badge"><span class="icon">&#128196;</span> Notion</div>
+    <div class="integration-badge"><span class="icon">&#127912;</span> Figma</div>
+    <div class="integration-badge"><span class="icon">&#9729;&#65039;</span> AWS</div>
+    <div class="integration-badge"><span class="icon">&#128202;</span> Google Sheets</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section section-center" id="pricing">
+  <div class="section-tag">PRICING</div>
+  <h2 class="reveal">简单透明的定价。</h2>
+  <p class="reveal">免费开始，按需升级，没有隐藏费用。</p>
+  <div class="pricing-grid">
+    <div class="price-card reveal">
+      <div class="plan-name">Free</div>
+      <div class="price">&#165;0 <span>/ 月</span></div>
+      <div class="plan-desc">适合个人和小型团队</div>
+      <ul class="price-features">
+        <li><span class="ck">&#10003;</span> 最多 5 人团队</li>
+        <li><span class="ck">&#10003;</span> 3 个项目</li>
+        <li><span class="ck">&#10003;</span> 基础看板和日历</li>
+        <li><span class="ck">&#10003;</span> 1GB 文件存储</li>
+      </ul>
+      <a href="#" class="btn btn-outline" style="width:100%;justify-content:center;">免费开始</a>
+    </div>
+    <div class="price-card popular reveal">
+      <div class="plan-name">Pro</div>
+      <div class="price">&#165;79 <span>/ 人 / 月</span></div>
+      <div class="plan-desc">适合成长中的团队</div>
+      <ul class="price-features">
+        <li><span class="ck">&#10003;</span> 无限团队人数</li>
+        <li><span class="ck">&#10003;</span> 无限项目</li>
+        <li><span class="ck">&#10003;</span> AI 助手 &amp; 自动化</li>
+        <li><span class="ck">&#10003;</span> 高级报表分析</li>
+        <li><span class="ck">&#10003;</span> 50GB 文件存储</li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;">开始 14 天试用</a>
+    </div>
+    <div class="price-card reveal">
+      <div class="plan-name">Enterprise</div>
+      <div class="price">定制</div>
+      <div class="plan-desc">适合大型企业</div>
+      <ul class="price-features">
+        <li><span class="ck">&#10003;</span> 一切 Pro 功能</li>
+        <li><span class="ck">&#10003;</span> SSO 单点登录</li>
+        <li><span class="ck">&#10003;</span> 私有化部署</li>
+        <li><span class="ck">&#10003;</span> 专属客户成功经理</li>
+        <li><span class="ck">&#10003;</span> SLA 保障</li>
+      </ul>
+      <a href="#" class="btn btn-outline" style="width:100%;justify-content:center;">联系销售</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <h2 class="reveal">准备好提升团队效率了吗？</h2>
+  <p class="reveal">免费试用 14 天，无需信用卡，随时取消。</p>
+  <a href="#" class="btn btn-primary reveal">免费开始使用 &#8594;</a>
+</section>
+
+<footer>
+  <a href="index.html" class="back-link">&#8592; 返回 FREESIA 作品集</a>
+  <div class="footer-brand">CloudFlow</div>
+  <div class="footer-links">
+    <a href="#">产品</a><a href="#">价格</a><a href="#">文档</a>
+    <a href="#">博客</a><a href="#">关于</a><a href="#">联系我们</a>
+  </div>
+  <div class="footer-copy">&#169; 2026 CloudFlow Inc. All rights reserved. | 此页面由 FREESIA 工作室设计开发</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

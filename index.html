@@ -1,0 +1,612 @@
+<!DOCTYPE HTML>
+<!--
+	Based on Hyperspace by HTML5 UP (html5up.net | @ajlkn)
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+	Customized for FREESIA Studio
+-->
+<html lang="zh-CN">
+	<head>
+		<title>FREESIA - 网页设计与开发工作室</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<style>
+			body, h1, h2, h3, h4, h5, h6, p, li, a, input, textarea, button, label {
+				font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Source Sans Pro', Helvetica, sans-serif;
+			}
+
+			/* ===== Portfolio Mockup Styles ===== */
+			.portfolio-showcase { display: flex; flex-direction: column; gap: 2rem; }
+			.showcase-row { display: flex; gap: 2rem; }
+			.showcase-card {
+				flex: 1; border-radius: 12px; overflow: hidden;
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.06);
+				transition: transform 0.4s ease, border-color 0.4s ease;
+				cursor: pointer; text-decoration: none; color: inherit;
+				display: flex; flex-direction: column;
+			}
+			.showcase-card:hover {
+				transform: translateY(-6px);
+				border-color: rgba(255,255,255,0.15);
+			}
+			.showcase-screen { aspect-ratio: 16/10; overflow: hidden; flex-shrink: 0; }
+			.showcase-info {
+				padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.06);
+			}
+			.showcase-tag {
+				display: inline-block; padding: 0.15rem 0.6rem; border-radius: 4px;
+				background: rgba(255,255,255,0.06); font-size: 0.7rem;
+				color: rgba(255,255,255,0.5); margin-bottom: 0.5rem;
+				letter-spacing: 0.05em; font-weight: 500;
+			}
+			.showcase-info h3 { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.25rem 0; }
+			.showcase-info p { font-size: 0.85rem; color: rgba(255,255,255,0.45); margin: 0; }
+
+			/* Browser Chrome */
+			.browser-bar {
+				height: 28px; background: rgba(0,0,0,0.3);
+				display: flex; align-items: center;
+				padding: 0 12px; gap: 5px;
+			}
+			.b-dot { width: 7px; height: 7px; border-radius: 50%; }
+			.b-dot.r { background: #ff5f57; }
+			.b-dot.y { background: #febc2e; }
+			.b-dot.g { background: #28c840; }
+			.b-url {
+				margin-left: 10px; font-size: 0.6rem;
+				color: rgba(255,255,255,0.3); font-family: monospace;
+				background: rgba(255,255,255,0.05); padding: 2px 10px; border-radius: 3px;
+			}
+			.screen-body { height: calc(100% - 28px); overflow: hidden; position: relative; }
+
+			/* --- P1: SaaS --- */
+			.p1-body {
+				background: linear-gradient(135deg, #1a1035, #0f0a2e);
+				height: 100%; padding: 1.5rem; display: flex; flex-direction: column;
+			}
+			.p1-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+			.p1-logo { font-size: 0.75rem; font-weight: 700; color: #a78bfa; }
+			.p1-links { display: flex; gap: 0.8rem; }
+			.p1-links span { font-size: 0.5rem; color: rgba(255,255,255,0.3); }
+			.p1-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+			.p1-center h2 { font-size: clamp(0.8rem, 2vw, 1.3rem); font-weight: 800; color: #fff; line-height: 1.2; }
+			.p1-center h2 em { font-style: normal; color: #a78bfa; }
+			.p1-center .sub { font-size: 0.5rem; color: rgba(255,255,255,0.4); margin-top: 0.4rem; max-width: 240px; }
+			.p1-btn {
+				margin-top: 0.6rem; display: inline-block;
+				padding: 0.35rem 1.2rem; border-radius: 6px;
+				background: linear-gradient(135deg, #7c3aed, #a78bfa);
+				color: #fff; font-size: 0.55rem; font-weight: 600;
+			}
+			.p1-cards { display: flex; gap: 0.5rem; margin-top: 1rem; }
+			.p1-card {
+				padding: 0.6rem; border-radius: 8px;
+				background: rgba(255,255,255,0.05);
+				border: 1px solid rgba(255,255,255,0.06);
+				flex: 1; text-align: center;
+			}
+			.p1-card .ic { font-size: 0.9rem; }
+			.p1-card h4 { font-size: 0.45rem; font-weight: 600; color: #fff; margin-top: 0.2rem; }
+			.p1-card p { font-size: 0.38rem; color: rgba(255,255,255,0.3); margin-top: 0.1rem; }
+
+			/* --- P2: E-commerce --- */
+			.p2-body {
+				background: #faf8f5; height: 100%; padding: 1rem 1.2rem;
+			}
+			.p2-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+			.p2-logo { font-size: 0.75rem; font-weight: 800; color: #1a1a1a; letter-spacing: 0.12em; }
+			.p2-banner {
+				border-radius: 8px; padding: 1rem;
+				background: linear-gradient(135deg, #f5efe6, #ebe3d5);
+				text-align: center; margin-bottom: 0.6rem;
+			}
+			.p2-banner h3 { font-size: 0.7rem; font-weight: 800; color: #1a1a1a; }
+			.p2-banner p { font-size: 0.45rem; color: #666; margin-top: 0.15rem; }
+			.p2-prods { display: flex; gap: 0.5rem; }
+			.p2-prod { flex: 1; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+			.p2-prod-img {
+				aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+				font-size: 1.4rem;
+			}
+			.p2-prod-img.a { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+			.p2-prod-img.b { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+			.p2-prod-img.c { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+			.p2-prod-img.d { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+			.p2-prod-info { padding: 0.4rem; }
+			.p2-prod-info h4 { font-size: 0.45rem; font-weight: 600; color: #1a1a1a; }
+			.p2-prod-info span { font-size: 0.45rem; font-weight: 700; color: #1a1a1a; }
+
+			/* --- P3: Dashboard --- */
+			.p3-body { background: #0f1117; height: 100%; display: flex; }
+			.p3-side {
+				width: 40px; background: #161822; display: flex; flex-direction: column;
+				align-items: center; padding: 0.6rem 0; gap: 0.6rem;
+				border-right: 1px solid rgba(255,255,255,0.06);
+			}
+			.p3-side-icon {
+				width: 22px; height: 22px; border-radius: 5px;
+				display: flex; align-items: center; justify-content: center;
+				font-size: 0.5rem; color: rgba(255,255,255,0.3);
+			}
+			.p3-side-icon.act { background: rgba(59,130,246,0.2); color: #3b82f6; }
+			.p3-main { flex: 1; padding: 0.8rem; }
+			.p3-main h3 { font-size: 0.65rem; font-weight: 700; color: #e8e9ed; margin-bottom: 0.5rem; }
+			.p3-metrics { display: flex; gap: 0.4rem; margin-bottom: 0.5rem; }
+			.p3-metric {
+				flex: 1; padding: 0.5rem; border-radius: 6px;
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.06);
+			}
+			.p3-metric .lbl { font-size: 0.38rem; color: rgba(255,255,255,0.35); }
+			.p3-metric .val { font-size: 0.7rem; font-weight: 700; color: #e8e9ed; margin-top: 0.1rem; }
+			.p3-metric .chg { font-size: 0.38rem; color: #22c55e; margin-top: 0.05rem; }
+			.p3-chart {
+				border-radius: 6px; background: rgba(255,255,255,0.02);
+				border: 1px solid rgba(255,255,255,0.06);
+				height: 60px; overflow: hidden;
+			}
+			.p3-chart svg { width: 100%; height: 100%; }
+
+			/* --- P4: Restaurant --- */
+			.p4-body {
+				background: #1a1410; height: 100%; padding: 1rem 1.2rem;
+				position: relative; overflow: hidden;
+			}
+			.p4-body::before {
+				content: ''; position: absolute; top: -40%; right: -20%;
+				width: 250px; height: 250px; border-radius: 50%;
+				background: radial-gradient(circle, rgba(234,179,8,0.08), transparent 70%);
+			}
+			.p4-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; position: relative; }
+			.p4-logo { font-size: 0.7rem; font-weight: 700; color: #d4a853; font-style: italic; }
+			.p4-links { display: flex; gap: 0.6rem; }
+			.p4-links span { font-size: 0.45rem; color: rgba(255,255,255,0.25); }
+			.p4-hero { position: relative; }
+			.p4-hero h2 { font-size: clamp(0.7rem, 1.8vw, 1.2rem); font-weight: 800; color: #f2efe8; line-height: 1.2; }
+			.p4-hero h2 em { font-style: normal; color: #d4a853; }
+			.p4-hero > p { font-size: 0.45rem; color: rgba(255,255,255,0.35); margin-top: 0.3rem; max-width: 180px; }
+			.p4-dishes { display: flex; gap: 0.4rem; margin-top: 0.8rem; }
+			.p4-dish {
+				padding: 0.5rem; border-radius: 8px;
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.06);
+				text-align: center; width: 60px;
+			}
+			.p4-dish .em { font-size: 1rem; }
+			.p4-dish h4 { font-size: 0.4rem; color: #f2efe8; margin-top: 0.2rem; }
+			.p4-dish p { font-size: 0.38rem; color: #d4a853; font-weight: 600; }
+
+			/* Stats bar */
+			.stats-bar {
+				display: flex; justify-content: center; gap: 3rem;
+				padding: 2rem 0; margin-top: 2rem;
+				border-top: 1px solid rgba(255,255,255,0.08);
+			}
+			.stats-bar .stat { text-align: center; }
+			.stats-bar .stat-num {
+				font-size: 2rem; font-weight: 800;
+			}
+			.stats-bar .stat-lbl { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-top: 0.15rem; }
+
+			/* Review cards */
+			.reviews-grid { display: flex; gap: 1.5rem; margin-top: 2rem; }
+			.review-card {
+				flex: 1; padding: 1.5rem; border-radius: 12px;
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.06);
+			}
+			.review-stars { color: #f59e0b; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 0.8rem; }
+			.review-card blockquote {
+				font-size: 0.9rem; color: rgba(255,255,255,0.55);
+				line-height: 1.8; font-style: italic; margin: 0 0 1rem 0;
+				padding: 0; border: none;
+			}
+			.review-author { display: flex; align-items: center; gap: 0.6rem; }
+			.review-avatar {
+				width: 32px; height: 32px; border-radius: 50%;
+				display: flex; align-items: center; justify-content: center;
+				font-size: 0.75rem; font-weight: 700; color: #fff;
+			}
+			.review-name { font-size: 0.85rem; font-weight: 600; }
+			.review-role { font-size: 0.7rem; color: rgba(255,255,255,0.35); }
+
+			/* Process */
+			.process-steps { display: flex; gap: 1.5rem; margin-top: 2rem; }
+			.process-step {
+				flex: 1; text-align: center; padding: 1.5rem;
+				border-radius: 12px;
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.06);
+			}
+			.step-num {
+				display: inline-flex; width: 36px; height: 36px;
+				align-items: center; justify-content: center;
+				border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+				font-weight: 700; font-size: 0.9rem; margin-bottom: 0.8rem;
+			}
+			.process-step h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+			.process-step p { font-size: 0.85rem; color: rgba(255,255,255,0.45); }
+
+			/* Responsive portfolio */
+			@media screen and (max-width: 980px) {
+				.showcase-row { flex-direction: column; }
+				.reviews-grid { flex-direction: column; }
+				.process-steps { flex-direction: column; }
+				.stats-bar { flex-wrap: wrap; gap: 1.5rem; }
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Sidebar -->
+			<section id="sidebar">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a href="#intro">FREESIA</a></li>
+							<li><a href="#services">服务</a></li>
+							<li><a href="#portfolio">作品</a></li>
+							<li><a href="#process">流程</a></li>
+							<li><a href="#reviews">评价</a></li>
+							<li><a href="#contact">联系</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Intro -->
+					<section id="intro" class="wrapper style1 fullscreen fade-up">
+						<div class="inner">
+							<h1>FREESIA</h1>
+							<p>网页设计与开发工作室<br/>
+							设计驱动转化，代码实现创意。为你的品牌打造独一无二的数字体验。</p>
+							<div class="stats-bar">
+								<div class="stat"><div class="stat-num">36</div><div class="stat-lbl">已完成项目</div></div>
+								<div class="stat"><div class="stat-num">98%</div><div class="stat-lbl">客户满意度</div></div>
+								<div class="stat"><div class="stat-num">12</div><div class="stat-lbl">长期合作客户</div></div>
+								<div class="stat"><div class="stat-num">5天</div><div class="stat-lbl">平均交付周期</div></div>
+							</div>
+							<ul class="actions">
+								<li><a href="#portfolio" class="button scrolly">查看作品集</a></li>
+								<li><a href="#contact" class="button scrolly">获取报价</a></li>
+							</ul>
+						</div>
+					</section>
+
+				<!-- Services -->
+					<section id="services" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>我能为你做什么</h2>
+							<p>从品牌官网到电商平台，从落地页到管理后台，设计与开发一体化交付。所有项目均包含响应式适配、基础 SEO 和 30 天免费维护。</p>
+							<div class="features">
+								<section>
+									<span class="icon solid major fa-gem"></span>
+									<h3>品牌官网</h3>
+									<p>量身打造视觉统一、交互流畅的品牌展示网站，提升专业度与信任感。<br/><strong>&#165;1,500 - 5,000</strong></p>
+								</section>
+								<section>
+									<span class="icon solid major fa-rocket"></span>
+									<h3>营销落地页</h3>
+									<p>高转化率的推广页面，从用户心理出发设计信息架构，助力产品触达目标人群。<br/><strong>&#165;800 - 2,500</strong></p>
+								</section>
+								<section>
+									<span class="icon solid major fa-shopping-cart"></span>
+									<h3>电商页面</h3>
+									<p>首页、详情页、活动页全套设计开发，注重商品展示与购买流程的体验优化。<br/><strong>&#165;1,200 - 4,000</strong></p>
+								</section>
+								<section>
+									<span class="icon solid major fa-desktop"></span>
+									<h3>后台管理系统</h3>
+									<p>数据可视化仪表盘、CRM 后台等企业级应用，清晰高效的信息架构设计。<br/><strong>&#165;3,000 - 8,000</strong></p>
+								</section>
+								<section>
+									<span class="icon solid major fa-mobile-alt"></span>
+									<h3>响应式适配</h3>
+									<p>确保网页在手机、平板、桌面等各种设备上都有完美的显示效果与交互体验。</p>
+								</section>
+								<section>
+									<span class="icon solid major fa-bolt"></span>
+									<h3>性能优化 &amp; SEO</h3>
+									<p>页面加载速度优化、SEO 基础配置、代码质量保障，让网站跑得更快更容易被发现。</p>
+								</section>
+							</div>
+						</div>
+					</section>
+
+				<!-- Portfolio -->
+					<section id="portfolio" class="wrapper style2 spotlights">
+						<section>
+							<a href="cloudflow.html" class="image" style="background: linear-gradient(135deg, #1a1035, #0f0a2e);">
+								<div style="width:100%;height:100%;display:flex;flex-direction:column;">
+									<div class="browser-bar">
+										<span class="b-dot r"></span><span class="b-dot y"></span><span class="b-dot g"></span>
+										<span class="b-url">www.cloudflow.app</span>
+									</div>
+									<div class="p1-body" style="flex:1;">
+										<div class="p1-top">
+											<div class="p1-logo">CloudFlow</div>
+											<div class="p1-links"><span>产品</span><span>价格</span><span>文档</span></div>
+										</div>
+										<div class="p1-center">
+											<h2>用 AI 重新定义<br><em>团队协作</em>方式</h2>
+											<p class="sub">更智能的项目管理，让效率提升 300%</p>
+											<span class="p1-btn">免费试用 &#8594;</span>
+										</div>
+										<div class="p1-cards">
+											<div class="p1-card"><div class="ic">&#128202;</div><h4>智能看板</h4></div>
+											<div class="p1-card"><div class="ic">&#9889;</div><h4>自动化流程</h4></div>
+											<div class="p1-card"><div class="ic">&#128274;</div><h4>企业安全</h4></div>
+										</div>
+									</div>
+								</div>
+							</a>
+							<div class="content">
+								<div class="inner">
+									<h2>CloudFlow - AI 协作平台</h2>
+									<p>为企业 SaaS 协作工具打造的高转化产品官网。从 Hero 到定价表全流程设计，上线后注册转化率提升 42%。</p>
+									<ul class="actions">
+										<li><a href="cloudflow.html" class="button">查看完整页面</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						<section>
+							<a href="yumu.html" class="image" style="background: linear-gradient(135deg, #f5efe6, #ebe3d5);">
+								<div style="width:100%;height:100%;display:flex;flex-direction:column;">
+									<div class="browser-bar" style="background:rgba(0,0,0,0.06);">
+										<span class="b-dot r"></span><span class="b-dot y"></span><span class="b-dot g"></span>
+										<span class="b-url" style="color:rgba(0,0,0,0.3);background:rgba(0,0,0,0.05);">www.yumushop.com</span>
+									</div>
+									<div class="p2-body" style="flex:1;">
+										<div class="p2-top">
+											<div class="p2-logo">YUMU</div>
+										</div>
+										<div class="p2-banner">
+											<h3>春日好物节</h3>
+											<p>精选生活美学 / 满 299 减 50</p>
+										</div>
+										<div class="p2-prods">
+											<div class="p2-prod"><div class="p2-prod-img a">&#127861;</div><div class="p2-prod-info"><h4>手冲咖啡壶</h4><span>&#165;239</span></div></div>
+											<div class="p2-prod"><div class="p2-prod-img b">&#127807;</div><div class="p2-prod-info"><h4>北欧花瓶</h4><span>&#165;149</span></div></div>
+											<div class="p2-prod"><div class="p2-prod-img c">&#128218;</div><div class="p2-prod-info"><h4>手账本</h4><span>&#165;69</span></div></div>
+											<div class="p2-prod"><div class="p2-prod-img d">&#127800;</div><div class="p2-prod-info"><h4>香薰蜡烛</h4><span>&#165;89</span></div></div>
+										</div>
+									</div>
+								</div>
+							</a>
+							<div class="content">
+								<div class="inner">
+									<h2>YUMU - 生活好物商城</h2>
+									<p>极简日系风格电商网站。重点在商品展示的呼吸感和购物流程的流畅度，上线后客单价提升 28%。</p>
+									<ul class="actions">
+										<li><a href="yumu.html" class="button">查看完整页面</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+						<section>
+							<a href="insightx.html" class="image" style="background: #0f1117;">
+								<div style="width:100%;height:100%;display:flex;flex-direction:column;">
+									<div class="browser-bar">
+										<span class="b-dot r"></span><span class="b-dot y"></span><span class="b-dot g"></span>
+										<span class="b-url">app.insightx.cn/dashboard</span>
+									</div>
+									<div class="p3-body" style="flex:1;">
+										<div class="p3-side">
+											<div class="p3-side-icon act">&#128200;</div>
+											<div class="p3-side-icon">&#128101;</div>
+											<div class="p3-side-icon">&#128172;</div>
+											<div class="p3-side-icon">&#9881;</div>
+										</div>
+										<div class="p3-main">
+											<h3>数据总览</h3>
+											<div class="p3-metrics">
+												<div class="p3-metric"><div class="lbl">总营收</div><div class="val">&#165;124W</div><div class="chg">&#8593; 12.5%</div></div>
+												<div class="p3-metric"><div class="lbl">活跃用户</div><div class="val">8.6K</div><div class="chg">&#8593; 8.2%</div></div>
+												<div class="p3-metric"><div class="lbl">转化率</div><div class="val">4.3%</div><div class="chg">&#8593; 1.8%</div></div>
+											</div>
+											<div class="p3-chart">
+												<svg viewBox="0 0 400 55" preserveAspectRatio="none">
+													<defs><linearGradient id="cg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></linearGradient></defs>
+													<path d="M0,40 C40,38 80,28 120,25 S200,18 240,20 S320,12 360,9 L400,7 L400,55 L0,55 Z" fill="url(#cg)"/>
+													<path d="M0,40 C40,38 80,28 120,25 S200,18 240,20 S320,12 360,9 L400,7" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
+												</svg>
+											</div>
+										</div>
+									</div>
+								</div>
+							</a>
+							<div class="content">
+								<div class="inner">
+									<h2>InsightX - 数据分析仪表盘</h2>
+									<p>企业级数据可视化管理后台。核心是信息层级清晰、操作效率高，改版后团队使用效率提升 40%。</p>
+									<ul class="actions">
+										<li><a href="insightx.html" class="button">查看完整页面</a></li>
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
+
+				<!-- More Portfolio (Sakura) + Process -->
+					<section id="more-works" class="wrapper style3 fade-up">
+						<div class="inner">
+							<div class="showcase-row">
+								<a href="sakura.html" class="showcase-card" style="flex:1;">
+									<div class="showcase-screen">
+										<div class="browser-bar">
+											<span class="b-dot r"></span><span class="b-dot y"></span><span class="b-dot g"></span>
+											<span class="b-url">www.sakura-kitchen.cn</span>
+										</div>
+										<div class="screen-body">
+											<div class="p4-body">
+												<div class="p4-top">
+													<div class="p4-logo">Sakura Kitchen</div>
+													<div class="p4-links"><span>菜单</span><span>预约</span><span>故事</span></div>
+												</div>
+												<div class="p4-hero">
+													<h2>每一道料理<br>都是<em>味觉旅行</em></h2>
+													<p>传承日式料理匠心精神，呈现最纯粹的风味。</p>
+													<div class="p4-dishes">
+														<div class="p4-dish"><div class="em">&#127843;</div><h4>握寿司</h4><p>&#165;188</p></div>
+														<div class="p4-dish"><div class="em">&#127836;</div><h4>豚骨拉面</h4><p>&#165;58</p></div>
+														<div class="p4-dish"><div class="em">&#127862;</div><h4>清酒套餐</h4><p>&#165;128</p></div>
+														<div class="p4-dish"><div class="em">&#127857;</div><h4>和牛刺身</h4><p>&#165;268</p></div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="showcase-info">
+										<div class="showcase-tag">餐饮品牌官网</div>
+										<h3>Sakura Kitchen - 日式料理</h3>
+										<p>沉浸式品牌体验网站，线上预约量增长 65%</p>
+									</div>
+								</a>
+							</div>
+						</div>
+					</section>
+
+				<!-- Process -->
+					<section id="process" class="wrapper style1 fade-up">
+						<div class="inner">
+							<h2>合作流程</h2>
+							<p>清晰透明的工作流，让你全程安心。</p>
+							<div class="process-steps">
+								<div class="process-step">
+									<div class="step-num">01</div>
+									<h3>需求沟通</h3>
+									<p>深入了解你的业务目标、品牌调性和功能需求</p>
+								</div>
+								<div class="process-step">
+									<div class="step-num">02</div>
+									<h3>方案设计</h3>
+									<p>输出设计稿与技术方案，确认后进入开发</p>
+								</div>
+								<div class="process-step">
+									<div class="step-num">03</div>
+									<h3>开发实现</h3>
+									<p>高质量代码实现，定期同步进度</p>
+								</div>
+								<div class="process-step">
+									<div class="step-num">04</div>
+									<h3>交付上线</h3>
+									<p>测试验收后部署，附赠 30 天免费维护</p>
+								</div>
+							</div>
+						</div>
+					</section>
+
+				<!-- Reviews -->
+					<section id="reviews" class="wrapper style3 fade-up">
+						<div class="inner">
+							<h2>客户评价</h2>
+							<div class="reviews-grid">
+								<div class="review-card">
+									<div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+									<blockquote>"响应速度快，设计审美在线，最终效果远超预期。动效细节让品牌质感提升了一个档次。"</blockquote>
+									<div class="review-author">
+										<div class="review-avatar" style="background:#6366f1;">L</div>
+										<div><div class="review-name">林先生</div><div class="review-role">科技公司创始人</div></div>
+									</div>
+								</div>
+								<div class="review-card">
+									<div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+									<blockquote>"沟通效率高，设计到开发一条龙搞定。省了大量对接成本，后续维护也很及时。"</blockquote>
+									<div class="review-author">
+										<div class="review-avatar" style="background:#ec4899;">W</div>
+										<div><div class="review-name">王女士</div><div class="review-role">品牌主理人</div></div>
+									</div>
+								</div>
+								<div class="review-card">
+									<div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+									<blockquote>"后台改版后团队效率提升 40%，界面清晰好用。专业的人做专业的事。"</blockquote>
+									<div class="review-author">
+										<div class="review-avatar" style="background:#22c55e;">Z</div>
+										<div><div class="review-name">张经理</div><div class="review-role">电商运营负责人</div></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+				<!-- Contact -->
+					<section id="contact" class="wrapper style1 fade-up">
+						<div class="inner">
+							<h2>开始聊聊你的项目</h2>
+							<p>无论你是初创团队还是成熟企业，初次咨询免费。告诉我你的需求，我会在 24 小时内回复。</p>
+							<div class="split style1">
+								<section>
+									<form method="post" action="#">
+										<div class="fields">
+											<div class="field half">
+												<label for="name">姓名</label>
+												<input type="text" name="name" id="name" />
+											</div>
+											<div class="field half">
+												<label for="email">邮箱</label>
+												<input type="text" name="email" id="email" />
+											</div>
+											<div class="field">
+												<label for="message">项目需求描述</label>
+												<textarea name="message" id="message" rows="5" placeholder="请简单描述你的项目类型、页面数量、参考网站和期望上线时间..."></textarea>
+											</div>
+										</div>
+										<ul class="actions">
+											<li><a href="" class="button submit">发送消息</a></li>
+										</ul>
+									</form>
+								</section>
+								<section>
+									<ul class="contact">
+										<li>
+											<h3>邮箱</h3>
+											<a href="mailto:32778849820@qq.com">32778849820@qq.com</a>
+										</li>
+										<li>
+											<h3>服务范围</h3>
+											<span>品牌官网 / 营销落地页<br />
+											电商页面 / 后台管理系统<br />
+											响应式适配 / 性能优化</span>
+										</li>
+										<li>
+											<h3>技术栈</h3>
+											<span>React / Vue / Next.js / TypeScript<br/>
+											Tailwind CSS / Node.js / Figma</span>
+										</li>
+									</ul>
+								</section>
+							</div>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper style1-alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; 2026 FREESIA. All rights reserved.</li>
+						<li>Template: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

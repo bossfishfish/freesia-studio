@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura Kitchen - 匠心日式料理</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0f0d0a;
+      --surface: #1a1714;
+      --surface-2: #231f1b;
+      --gold: #c9a96e;
+      --gold-light: #dfc195;
+      --gold-dim: rgba(201,169,110,0.1);
+      --text: #f2efe8;
+      --text-2: #a39e94;
+      --text-3: #6b665e;
+      --border: #2e2a24;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+      background: var(--bg); color: var(--text);
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    .serif { font-family: 'Noto Serif SC', serif; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15,13,10,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(201,169,110,0.08);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 40px;
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 20px; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; color: var(--text-2); text-decoration: none;
+      font-weight: 400; letter-spacing: 0.04em; transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-reserve {
+      padding: 8px 22px; border-radius: 2px;
+      border: 1px solid var(--gold); color: var(--gold) !important;
+      font-size: 12px !important; font-weight: 500 !important;
+      letter-spacing: 0.08em !important;
+      transition: all 0.3s !important;
+    }
+    .nav-reserve:hover { background: var(--gold); color: var(--bg) !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center;
+      padding: 120px 40px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(201,169,110,0.06) 0%, transparent 60%);
+    }
+    .hero-overline {
+      font-size: 12px; font-weight: 500; color: var(--gold);
+      letter-spacing: 0.2em; text-transform: uppercase;
+      margin-bottom: 28px; position: relative;
+    }
+    .hero-overline::before, .hero-overline::after {
+      content: ''; position: absolute; top: 50%;
+      width: 40px; height: 1px; background: var(--gold); opacity: 0.3;
+    }
+    .hero-overline::before { right: calc(100% + 16px); }
+    .hero-overline::after { left: calc(100% + 16px); }
+    .hero h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 900; line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .hero h1 em { font-style: normal; color: var(--gold); }
+    .hero > p {
+      font-size: 17px; color: var(--text-2); margin-top: 20px;
+      max-width: 440px; line-height: 1.8;
+    }
+    .hero-cta {
+      margin-top: 40px; display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 40px; border: 1px solid var(--gold);
+      color: var(--gold); text-decoration: none;
+      font-size: 14px; font-weight: 500; letter-spacing: 0.08em;
+      transition: all 0.4s;
+    }
+    .hero-cta:hover { background: var(--gold); color: var(--bg); }
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      font-size: 12px; color: var(--text-3); letter-spacing: 0.1em;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); }
+
+    /* SECTION */
+    .section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-overline {
+      font-size: 11px; color: var(--gold); letter-spacing: 0.2em;
+      text-transform: uppercase; font-weight: 500; margin-bottom: 14px;
+    }
+    .section-header h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(28px, 4vw, 42px); font-weight: 700;
+      line-height: 1.2;
+    }
+    .section-header p {
+      font-size: 15px; color: var(--text-2); margin-top: 12px;
+      max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.8;
+    }
+    .gold-line {
+      width: 40px; height: 1px; background: var(--gold);
+      margin: 16px auto 0; opacity: 0.4;
+    }
+
+    /* PHILOSOPHY */
+    .philosophy {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .phi-card {
+      text-align: center; padding: 40px 24px;
+      border: 1px solid var(--border); border-radius: 4px;
+      transition: all 0.4s;
+    }
+    .phi-card:hover { border-color: var(--gold); background: var(--gold-dim); }
+    .phi-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+    .phi-card h3 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px; font-weight: 700; margin-bottom: 10px;
+    }
+    .phi-card p { font-size: 14px; color: var(--text-2); line-height: 1.8; }
+
+    /* MENU */
+    .menu-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .menu-item {
+      display: flex; gap: 20px; padding: 28px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 4px; transition: all 0.3s;
+    }
+    .menu-item:hover { border-color: var(--gold); }
+    .menu-emoji { font-size: 40px; flex-shrink: 0; }
+    .menu-info { flex: 1; }
+    .menu-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .menu-info .desc { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 8px; }
+    .menu-info .price { font-size: 18px; font-weight: 700; color: var(--gold); }
+    .menu-info .unit { font-size: 12px; color: var(--text-3); font-weight: 400; }
+
+    /* FEATURED */
+    .featured-banner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; margin-top: 0;
+    }
+    .featured-visual {
+      background: linear-gradient(135deg, #2a2118, #1a1510);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 100px; min-height: 360px;
+      position: relative;
+    }
+    .featured-visual::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at center, rgba(201,169,110,0.08), transparent 70%);
+    }
+    .featured-text {
+      padding: 56px 48px; display: flex; flex-direction: column;
+      justify-content: center;
+    }
+    .featured-text .section-overline { text-align: left; }
+    .featured-text h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 28px; font-weight: 700; line-height: 1.3;
+    }
+    .featured-text p {
+      font-size: 14px; color: var(--text-2); margin-top: 14px;
+      line-height: 1.8;
+    }
+    .featured-text .cta-link {
+      margin-top: 24px; display: inline-flex; align-items: center; gap: 6px;
+      font-size: 14px; color: var(--gold); text-decoration: none;
+      font-weight: 500; letter-spacing: 0.04em;
+    }
+
+    /* AMBIANCE */
+    .ambiance-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .amb-card {
+      aspect-ratio: 3/4; border-radius: 4px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 28px; position: relative; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .amb-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(15,13,10,0.9) 0%, transparent 60%);
+    }
+    .amb-bg {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; opacity: 0.15;
+    }
+    .amb-card h3 { font-size: 16px; font-weight: 700; position: relative; }
+    .amb-card p { font-size: 13px; color: var(--text-2); position: relative; margin-top: 4px; }
+
+    /* RESERVATION */
+    .reservation {
+      text-align: center; padding: 100px 40px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .reservation h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(28px, 4vw, 42px); font-weight: 700;
+    }
+    .reservation p {
+      font-size: 15px; color: var(--text-2); margin-top: 12px;
+      line-height: 1.8; max-width: 400px; margin-left: auto; margin-right: auto;
+    }
+    .res-details {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 36px;
+    }
+    .res-detail { text-align: center; }
+    .res-detail .label { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .res-detail .value { font-size: 16px; font-weight: 600; }
+    .res-cta {
+      margin-top: 36px; display: inline-flex;
+      padding: 16px 48px; border: 1px solid var(--gold);
+      color: var(--gold); text-decoration: none;
+      font-size: 14px; font-weight: 500; letter-spacing: 0.08em;
+      transition: all 0.4s;
+    }
+    .res-cta:hover { background: var(--gold); color: var(--bg); }
+
+    /* TESTIMONIALS */
+    .testi-row { display: flex; gap: 20px; }
+    .testi-card {
+      flex: 1; padding: 32px; border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .testi-stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 16px; }
+    .testi-card blockquote {
+      font-size: 14px; color: var(--text-2); line-height: 1.8;
+      font-style: italic; margin-bottom: 20px;
+    }
+    .testi-author { font-size: 13px; font-weight: 600; }
+    .testi-source { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+    /* FOOTER */
+    footer {
+      padding: 56px 40px; text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .footer-brand {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 24px; font-weight: 700; color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .footer-info { font-size: 13px; color: var(--text-3); line-height: 2; }
+    .footer-links {
+      display: flex; justify-content: center; gap: 20px;
+      margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);
+    }
+    .footer-links a { font-size: 12px; color: var(--text-3); text-decoration: none; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: 11px; color: var(--text-3); margin-top: 20px; opacity: 0.6;
+    }
+    .footer-copy a { color: var(--gold); text-decoration: none; opacity: 0.8; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 13px; color: var(--text-3); text-decoration: none;
+      margin-bottom: 24px; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 0.9s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .nav-links a:not(.nav-reserve) { display: none; }
+      .philosophy { grid-template-columns: 1fr; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .featured-banner { grid-template-columns: 1fr; }
+      .ambiance-grid { grid-template-columns: 1fr; }
+      .testi-row { flex-direction: column; }
+      .res-details { flex-direction: column; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">Sakura Kitchen</div>
+    <div class="nav-links">
+      <a href="#philosophy">理念</a>
+      <a href="#menu">菜单</a>
+      <a href="#ambiance">空间</a>
+      <a href="#reservation" class="nav-reserve">在线预约</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overline">EST. 2018 / TOKYO INSPIRED</div>
+  <h1>每一道料理<br>都是一场<em>味觉旅行</em></h1>
+  <p>传承日式料理的匠心精神，以最新鲜的当季食材，呈现最纯粹的风味体验。</p>
+  <a href="#reservation" class="hero-cta">预约用餐 &#8594;</a>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="section" id="philosophy">
+  <div class="section-header">
+    <div class="section-overline">OUR PHILOSOPHY</div>
+    <h2 class="reveal">三つの心</h2>
+    <p class="reveal">每一个细节，都承载着我们对料理的敬畏之心</p>
+    <div class="gold-line"></div>
+  </div>
+  <div class="philosophy">
+    <div class="phi-card reveal">
+      <span class="phi-icon">&#127807;</span>
+      <h3>食材之道</h3>
+      <p>每日清晨从筑地市场精选当季食材，从海鲜到蔬菜，只用最新鲜的原料入厨。</p>
+    </div>
+    <div class="phi-card reveal">
+      <span class="phi-icon">&#128293;</span>
+      <h3>匠心之技</h3>
+      <p>主厨修业二十年，师从东京银座名厨，将传统技法与现代创意融为一体。</p>
+    </div>
+    <div class="phi-card reveal">
+      <span class="phi-icon">&#127861;</span>
+      <h3>待客之礼</h3>
+      <p>一期一会的精神，让每一位来客都能感受到宾至如归的温暖与诚意。</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<div class="section" style="padding-top:0;">
+  <div class="featured-banner reveal">
+    <div class="featured-visual">&#127843;</div>
+    <div class="featured-text">
+      <div class="section-overline">OMAKASE</div>
+      <h2>主厨特选<br>春季限定套餐</h2>
+      <p>由主厨根据当日最佳食材即兴创作的 12 道料理，每一道都是独一无二的味觉惊喜。包含前菜、刺身、烧物、寿司、甜品等完整体验。</p>
+      <a href="#" class="cta-link">查看套餐详情 &#8250;</a>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section class="section" id="menu" style="background:var(--surface);max-width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header">
+      <div class="section-overline">MENU</div>
+      <h2 class="reveal">精选菜品</h2>
+      <p class="reveal">以下为部分招牌菜品，完整菜单请到店查阅</p>
+      <div class="gold-line"></div>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-item reveal">
+        <div class="menu-emoji">&#127843;</div>
+        <div class="menu-info">
+          <h3>特选握寿司</h3>
+          <div class="desc">精选当日鲜鱼，搭配醋饭手握成型，入口即化的极致体验。</div>
+          <div class="price">&#165;188 <span class="unit">/ 8贯</span></div>
+        </div>
+      </div>
+      <div class="menu-item reveal">
+        <div class="menu-emoji">&#127836;</div>
+        <div class="menu-info">
+          <h3>浓厚豚骨拉面</h3>
+          <div class="desc">12小时慢熬猪骨汤底，配以手打细面、溏心蛋和叉烧肉。</div>
+          <div class="price">&#165;58</div>
+        </div>
+      </div>
+      <div class="menu-item reveal">
+        <div class="menu-emoji">&#127857;</div>
+        <div class="menu-info">
+          <h3>A5 和牛刺身</h3>
+          <div class="desc">�的油花如雪花般均匀分布，薄切后蘸以特制柚子醋。</div>
+          <div class="price">&#165;268</div>
+        </div>
+      </div>
+      <div class="menu-item reveal">
+        <div class="menu-emoji">&#127833;</div>
+        <div class="menu-info">
+          <h3>炭火烧鸟串</h3>
+          <div class="desc">备长炭慢烤，从鸡腿到鸡心，每种部位都有独特风味。</div>
+          <div class="price">&#165;12 <span class="unit">/ 串</span></div>
+        </div>
+      </div>
+      <div class="menu-item reveal">
+        <div class="menu-emoji">&#127862;</div>
+        <div class="menu-info">
+          <h3>清酒品鉴套餐</h3>
+          <div class="desc">精选三款不同产区清酒，从辛口到�的口，感受米酒的多样魅力。</div>
+          <div class="price">&#165;128 <span class="unit">/ 3杯</span></div>
+        </div>
+      </div>
+      <div class="menu-item reveal">
+        <div class="menu-emoji">&#127856;</div>
+        <div class="menu-info">
+          <h3>抹茶千层</h3>
+          <div class="desc">宇治抹茶与法式千层的完美融合，苦甜交织的层次口感。</div>
+          <div class="price">&#165;48</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AMBIANCE -->
+<section class="section" id="ambiance">
+  <div class="section-header">
+    <div class="section-overline">AMBIANCE</div>
+    <h2 class="reveal">空间与氛围</h2>
+    <p class="reveal">以日式枯山水为灵感，营造宁静而温暖的用餐空间</p>
+    <div class="gold-line"></div>
+  </div>
+  <div class="ambiance-grid">
+    <div class="amb-card reveal" style="background:var(--surface);">
+      <div class="amb-bg">&#127860;</div>
+      <h3>吧台席</h3>
+      <p>面对主厨料理台，近距离欣赏料理过程</p>
+    </div>
+    <div class="amb-card reveal" style="background:var(--surface-2);">
+      <div class="amb-bg">&#127863;</div>
+      <h3>包厢</h3>
+      <p>私密空间，适合商务宴请与家族聚会</p>
+    </div>
+    <div class="amb-card reveal" style="background:var(--surface);">
+      <div class="amb-bg">&#127812;</div>
+      <h3>庭院露台</h3>
+      <p>春赏樱花秋观月，四季皆有不同风情</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-overline">REVIEWS</div>
+    <h2 class="reveal">食客之声</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="testi-row">
+    <div class="testi-card reveal">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <blockquote>"寿司入口的瞬间就知道食材有多新鲜，师傅的手艺真的没话说。环境也很有氛围感，吧台位可以看到制作过程，非常推荐。"</blockquote>
+      <div class="testi-author">陈先生</div>
+      <div class="testi-source">大众点评</div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <blockquote>"Omakase 套餐物超所值，12 道菜每一道都有惊喜。特别是那道和牛刺身，入口即化。已经去了三次，每次菜单都不一样。"</blockquote>
+      <div class="testi-author">Lisa W.</div>
+      <div class="testi-source">小红书</div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <blockquote>"在这里宴请客户非常有面子，包厢环境雅致安静，服务周到而不打扰。清酒品鉴套餐是完美的开场。"</blockquote>
+      <div class="testi-author">张总</div>
+      <div class="testi-source">Google Reviews</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESERVATION -->
+<section class="reservation" id="reservation">
+  <div class="section-overline">RESERVATION</div>
+  <h2 class="reveal">期待您的光临</h2>
+  <p class="reveal">为保证最佳用餐体验，建议提前预约</p>
+  <div class="res-details reveal">
+    <div class="res-detail">
+      <div class="label">营业时间</div>
+      <div class="value">午 11:30-14:00<br>晚 17:30-22:00</div>
+    </div>
+    <div class="res-detail">
+      <div class="label">地址</div>
+      <div class="value">上海市静安区<br>南京西路 1688 号 3F</div>
+    </div>
+    <div class="res-detail">
+      <div class="label">联系电话</div>
+      <div class="value">021-6288-8888</div>
+    </div>
+  </div>
+  <a href="#" class="res-cta reveal">立即预约 &#8594;</a>
+</section>
+
+<footer>
+  <a href="index.html" class="back-link">&#8592; 返回 FREESIA 作品集</a>
+  <div class="footer-brand">Sakura Kitchen</div>
+  <div class="footer-info">
+    上海市静安区南京西路 1688 号 3F<br>
+    营业时间：午 11:30-14:00 / 晚 17:30-22:00<br>
+    每周一休息 / 预约电话 021-6288-8888
+  </div>
+  <div class="footer-links">
+    <a href="#">菜单</a>
+    <a href="#">预约</a>
+    <a href="#">品牌故事</a>
+    <a href="#">合作咨询</a>
+    <a href="#">微信公众号</a>
+  </div>
+  <div class="footer-copy">
+    &#169; 2026 Sakura Kitchen. All rights reserved. | 此页面由 <a href="index.html">FREESIA</a> 工作室设计开发
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

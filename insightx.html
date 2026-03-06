@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InsightX - 数据分析仪表盘</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0e0f13;
+      --surface: #16171d;
+      --surface-2: #1e1f27;
+      --border: #2a2b35;
+      --text: #e8e9ed;
+      --text-2: #8b8d98;
+      --text-3: #5c5e6a;
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.12);
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.12);
+      --orange: #f59e0b;
+      --orange-dim: rgba(245,158,11,0.12);
+      --red: #ef4444;
+      --red-dim: rgba(239,68,68,0.12);
+      --purple: #a78bfa;
+      --purple-dim: rgba(167,139,250,0.12);
+    }
+    body {
+      font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px; background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px; flex-shrink: 0;
+      display: flex; flex-direction: column;
+      position: fixed; top: 0; bottom: 0; left: 0;
+      overflow-y: auto;
+    }
+    .sidebar-brand {
+      font-size: 18px; font-weight: 800; color: var(--text);
+      padding: 0 12px; margin-bottom: 32px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+    .sidebar-section { margin-bottom: 28px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 600; color: var(--text-3);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0 12px; margin-bottom: 8px;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 13px; color: var(--text-2); cursor: pointer;
+      transition: all 0.2s; margin-bottom: 2px;
+    }
+    .sidebar-item:hover { background: var(--surface-2); color: var(--text); }
+    .sidebar-item.active { background: var(--blue-dim); color: var(--blue); font-weight: 600; }
+    .sidebar-item .icon { font-size: 16px; width: 20px; text-align: center; }
+    .sidebar-item .badge {
+      margin-left: auto; padding: 1px 8px; border-radius: 10px;
+      background: var(--red-dim); color: var(--red);
+      font-size: 10px; font-weight: 700;
+    }
+    .sidebar-bottom {
+      margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);
+    }
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    }
+    .user-avatar {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 12px; font-weight: 700;
+    }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-role { font-size: 11px; color: var(--text-3); }
+    .back-link {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 12px; margin-top: 8px; border-radius: 8px;
+      font-size: 12px; color: var(--text-3); text-decoration: none;
+      transition: all 0.2s;
+    }
+    .back-link:hover { background: var(--surface-2); color: var(--text-2); }
+
+    /* MAIN */
+    .main { flex: 1; margin-left: 240px; padding: 28px 32px; overflow-y: auto; }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 28px;
+    }
+    .topbar h1 { font-size: 22px; font-weight: 800; }
+    .topbar-right { display: flex; gap: 10px; align-items: center; }
+    .period-selector {
+      display: flex; background: var(--surface); border-radius: 8px;
+      border: 1px solid var(--border); overflow: hidden;
+    }
+    .period-btn {
+      padding: 8px 16px; font-size: 12px; font-weight: 500;
+      color: var(--text-2); background: transparent;
+      border: none; cursor: pointer; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .period-btn.active { background: var(--blue); color: #fff; }
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 12px; color: var(--text-3);
+    }
+
+    /* METRIC CARDS */
+    .metrics-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 24px;
+    }
+    .metric-card {
+      padding: 20px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .metric-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .metric-label { font-size: 12px; color: var(--text-2); font-weight: 500; }
+    .metric-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+    .metric-value { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+    .metric-change {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 600; margin-top: 4px;
+      padding: 2px 8px; border-radius: 6px;
+    }
+    .metric-change.up { background: var(--green-dim); color: var(--green); }
+    .metric-change.down { background: var(--red-dim); color: var(--red); }
+
+    /* CHART AREA */
+    .charts-row {
+      display: grid; grid-template-columns: 2fr 1fr;
+      gap: 16px; margin-bottom: 24px;
+    }
+    .chart-card {
+      padding: 24px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .chart-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+    .chart-title { font-size: 14px; font-weight: 700; }
+    .chart-subtitle { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+    .chart-legend { display: flex; gap: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-2); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* SVG CHART */
+    .line-chart { width: 100%; height: 200px; }
+    .line-chart svg { width: 100%; height: 100%; }
+
+    /* DONUT */
+    .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 10px; }
+    .donut-chart { position: relative; width: 160px; height: 160px; }
+    .donut-chart svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .donut-center {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .donut-center .val { font-size: 24px; font-weight: 800; }
+    .donut-center .lbl { font-size: 11px; color: var(--text-3); }
+    .donut-legend { width: 100%; }
+    .donut-legend-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .donut-legend-item:last-child { border-bottom: none; }
+    .donut-legend-left { display: flex; align-items: center; gap: 8px; color: var(--text-2); }
+    .donut-legend-val { font-weight: 700; }
+
+    /* TABLE */
+    .table-card {
+      padding: 24px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .table-title { font-size: 14px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: var(--text-3); text-transform: uppercase;
+      letter-spacing: 0.05em; padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 14px 12px; font-size: 13px;
+      border-bottom: 1px solid rgba(42,43,53,0.5);
+    }
+    .table-product { display: flex; align-items: center; gap: 10px; }
+    .table-product-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .table-product-name { font-weight: 600; }
+    .table-product-cat { font-size: 11px; color: var(--text-3); }
+    .status-badge {
+      display: inline-flex; padding: 3px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 600;
+    }
+    .status-badge.active { background: var(--green-dim); color: var(--green); }
+    .status-badge.pending { background: var(--orange-dim); color: var(--orange); }
+    .bar-mini { height: 6px; border-radius: 3px; background: var(--surface-2); width: 100px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; }
+
+    .credit {
+      text-align: center; padding: 24px; font-size: 12px; color: var(--text-3);
+    }
+    .credit a { color: var(--blue); text-decoration: none; }
+
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand"><span class="brand-dot"></span> InsightX</div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">概览</div>
+    <div class="sidebar-item active"><span class="icon">&#128202;</span> 数据总览</div>
+    <div class="sidebar-item"><span class="icon">&#128200;</span> 实时监控</div>
+    <div class="sidebar-item"><span class="icon">&#128197;</span> 报表中心</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">业务</div>
+    <div class="sidebar-item"><span class="icon">&#128722;</span> 订单管理<span class="badge">12</span></div>
+    <div class="sidebar-item"><span class="icon">&#128101;</span> 客户分析</div>
+    <div class="sidebar-item"><span class="icon">&#128230;</span> 商品管理</div>
+    <div class="sidebar-item"><span class="icon">&#128176;</span> 财务数据</div>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">系统</div>
+    <div class="sidebar-item"><span class="icon">&#128172;</span> 消息通知<span class="badge">3</span></div>
+    <div class="sidebar-item"><span class="icon">&#128101;</span> 团队管理</div>
+    <div class="sidebar-item"><span class="icon">&#9881;</span> 系统设置</div>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="user-avatar">A</div>
+      <div>
+        <div class="user-name">Admin</div>
+        <div class="user-role">超级管理员</div>
+      </div>
+    </div>
+    <a href="index.html" class="back-link">&#8592; 返回 FREESIA 作品集</a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h1>数据总览</h1>
+      <div style="font-size:13px;color:var(--text-3);margin-top:2px;">更新时间：2026-03-06 14:30</div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">&#128269; 搜索...</div>
+      <div class="period-selector">
+        <button class="period-btn">今日</button>
+        <button class="period-btn active">本周</button>
+        <button class="period-btn">本月</button>
+        <button class="period-btn">季度</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-label">总营收</div>
+        <div class="metric-icon" style="background:var(--blue-dim);color:var(--blue);">&#165;</div>
+      </div>
+      <div class="metric-value">&#165;124.6W</div>
+      <div class="metric-change up">&#8593; 12.5% 较上周</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-label">订单量</div>
+        <div class="metric-icon" style="background:var(--green-dim);color:var(--green);">&#128230;</div>
+      </div>
+      <div class="metric-value">3,847</div>
+      <div class="metric-change up">&#8593; 8.2% 较上周</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-label">活跃用户</div>
+        <div class="metric-icon" style="background:var(--purple-dim);color:var(--purple);">&#128101;</div>
+      </div>
+      <div class="metric-value">8,621</div>
+      <div class="metric-change up">&#8593; 5.7% 较上周</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-label">转化率</div>
+        <div class="metric-icon" style="background:var(--orange-dim);color:var(--orange);">&#128202;</div>
+      </div>
+      <div class="metric-value">4.32%</div>
+      <div class="metric-change down">&#8595; 0.3% 较上周</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">营收趋势</div>
+          <div class="chart-subtitle">近 7 天营收数据对比</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--blue);"></span> 本周</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--border);"></span> 上周</div>
+        </div>
+      </div>
+      <div class="line-chart">
+        <svg viewBox="0 0 600 180" preserveAspectRatio="none">
+          <!-- Grid -->
+          <line x1="0" y1="45" x2="600" y2="45" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="4,4"/>
+          <line x1="0" y1="90" x2="600" y2="90" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="4,4"/>
+          <line x1="0" y1="135" x2="600" y2="135" stroke="var(--border)" stroke-width="0.5" stroke-dasharray="4,4"/>
+          <!-- Last week -->
+          <path d="M0,120 C50,115 100,100 150,110 S250,90 300,95 S400,80 450,85 S550,75 600,70" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+          <!-- This week area -->
+          <defs>
+            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="var(--blue)" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="var(--blue)" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0,100 C50,90 100,70 150,80 S250,50 300,55 S400,30 450,35 S550,20 600,15 L600,180 L0,180 Z" fill="url(#areaGrad)"/>
+          <path d="M0,100 C50,90 100,70 150,80 S250,50 300,55 S400,30 450,35 S550,20 600,15" fill="none" stroke="var(--blue)" stroke-width="2"/>
+          <!-- Data point -->
+          <circle cx="600" cy="15" r="4" fill="var(--blue)"/>
+          <circle cx="600" cy="15" r="8" fill="var(--blue)" opacity="0.2"/>
+          <!-- Labels -->
+          <text x="0" y="175" fill="var(--text-3)" font-size="11">周一</text>
+          <text x="100" y="175" fill="var(--text-3)" font-size="11">周二</text>
+          <text x="200" y="175" fill="var(--text-3)" font-size="11">周三</text>
+          <text x="300" y="175" fill="var(--text-3)" font-size="11">周四</text>
+          <text x="400" y="175" fill="var(--text-3)" font-size="11">周五</text>
+          <text x="500" y="175" fill="var(--text-3)" font-size="11">周六</text>
+          <text x="570" y="175" fill="var(--blue)" font-size="11" font-weight="700">今天</text>
+        </svg>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">流量来源</div>
+          <div class="chart-subtitle">本周各渠道占比</div>
+        </div>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut-chart">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--surface-2)" stroke-width="12"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--blue)" stroke-width="12"
+              stroke-dasharray="113 201" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--green)" stroke-width="12"
+              stroke-dasharray="69 245" stroke-dashoffset="-113" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--orange)" stroke-width="12"
+              stroke-dasharray="50 264" stroke-dashoffset="-182" stroke-linecap="round"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--purple)" stroke-width="12"
+              stroke-dasharray="32 282" stroke-dashoffset="-232" stroke-linecap="round"/>
+          </svg>
+          <div class="donut-center">
+            <div class="val">8.6K</div>
+            <div class="lbl">总访问</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="donut-legend-item">
+            <div class="donut-legend-left"><span class="legend-dot" style="background:var(--blue);width:8px;height:8px;border-radius:2px;"></span> 自然搜索</div>
+            <div class="donut-legend-val">36%</div>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-left"><span class="legend-dot" style="background:var(--green);width:8px;height:8px;border-radius:2px;"></span> 直接访问</div>
+            <div class="donut-legend-val">22%</div>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-left"><span class="legend-dot" style="background:var(--orange);width:8px;height:8px;border-radius:2px;"></span> 社交媒体</div>
+            <div class="donut-legend-val">16%</div>
+          </div>
+          <div class="donut-legend-item">
+            <div class="donut-legend-left"><span class="legend-dot" style="background:var(--purple);width:8px;height:8px;border-radius:2px;"></span> 付费投放</div>
+            <div class="donut-legend-val">10%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="chart-title">热销商品 TOP 5</div>
+      <div style="font-size:12px;color:var(--text-3);">本周数据</div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>商品</th><th>销量</th><th>营收</th><th>库存</th><th>状态</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="table-product"><div class="table-product-icon" style="background:var(--blue-dim);">&#127861;</div><div><div class="table-product-name">手冲咖啡壶套装</div><div class="table-product-cat">咖啡茶饮</div></div></div></td>
+          <td>847</td>
+          <td style="font-weight:700;">&#165;202,433</td>
+          <td><div class="bar-mini"><div class="bar-fill" style="width:35%;background:var(--orange);"></div></div></td>
+          <td><span class="status-badge active">在售</span></td>
+        </tr>
+        <tr>
+          <td><div class="table-product"><div class="table-product-icon" style="background:var(--green-dim);">&#127807;</div><div><div class="table-product-name">北欧陶瓷花瓶</div><div class="table-product-cat">居家装饰</div></div></div></td>
+          <td>623</td>
+          <td style="font-weight:700;">&#165;92,827</td>
+          <td><div class="bar-mini"><div class="bar-fill" style="width:72%;background:var(--green);"></div></div></td>
+          <td><span class="status-badge active">在售</span></td>
+        </tr>
+        <tr>
+          <td><div class="table-product"><div class="table-product-icon" style="background:var(--purple-dim);">&#128218;</div><div><div class="table-product-name">进口手账笔记本</div><div class="table-product-cat">文具手账</div></div></div></td>
+          <td>1,204</td>
+          <td style="font-weight:700;">&#165;66,220</td>
+          <td><div class="bar-mini"><div class="bar-fill" style="width:20%;background:var(--red);"></div></div></td>
+          <td><span class="status-badge pending">补货中</span></td>
+        </tr>
+        <tr>
+          <td><div class="table-product"><div class="table-product-icon" style="background:var(--orange-dim);">&#127800;</div><div><div class="table-product-name">白茶香薰蜡烛</div><div class="table-product-cat">香氛</div></div></div></td>
+          <td>518</td>
+          <td style="font-weight:700;">&#165;46,102</td>
+          <td><div class="bar-mini"><div class="bar-fill" style="width:58%;background:var(--green);"></div></div></td>
+          <td><span class="status-badge active">在售</span></td>
+        </tr>
+        <tr>
+          <td><div class="table-product"><div class="table-product-icon" style="background:var(--red-dim);">&#127869;</div><div><div class="table-product-name">日式陶瓷餐盘套装</div><div class="table-product-cat">餐厨器具</div></div></div></td>
+          <td>396</td>
+          <td style="font-weight:700;">&#165;78,804</td>
+          <td><div class="bar-mini"><div class="bar-fill" style="width:45%;background:var(--orange);"></div></div></td>
+          <td><span class="status-badge active">在售</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="credit">此页面由 <a href="index.html">FREESIA</a> 工作室设计开发</div>
+</div>
+
+</body>
+</html>
